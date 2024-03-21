@@ -108,6 +108,27 @@ function Launch() {
         console.log(typedMnemonic);
         setModalShow(true)
     }
+
+    function connectWallet() {
+      if (typeof window.ethereum !== "undefined") {
+
+        async function getAccount() {
+          try {
+            const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+            
+            const account = accounts[0];
+            localStorage.setItem("publicKey", account);
+            openNotification(t("Access success."),"",true,()=>window.location.href="/wallet/0");
+          } catch (error) {
+            console.error("User denied account access or an error occurred:", error);
+          }
+        }
+        getAccount();
+      } else {
+        console.log("MetaMask is not installed.");
+      }
+    }
+
     return (
         <>
         <div className="relative">
@@ -166,6 +187,31 @@ function Launch() {
                                         <Col span={24}>
                                             <Button className="create-button" onClick={createWallet}>{t("CREATE NEW WALLET")}</Button>
                                         </Col>
+                                    </Row>
+                                </Col>
+                            </Row>
+                        </Col>
+                        <Col xs={{offset: 1, span: 22}} md={{offset: 5, span: 7}} lg={{offset: 4, span: 8}}>
+                            <Row className="walletSelect div-wrap">
+                                <Col className="div-relative">
+                                    <Row className="wallet-detail">
+                                        <Col span={24}>
+                                            <img src="./assets/img/mark2.png"  style={{width: 135, height: 135}} />
+                                        </Col>
+                                    </Row>
+                                    <Row className="text-grey wallet-detail ">
+                                        <Col span={24}>
+                                             {t('ALREADY HAVE A WALLET?')}
+                                        </Col>
+                                    </Row>
+                                    <Row className="wallet-detail header">
+                                        {t("Connect your existing wallet to trade assets.")}
+                                    </Row>
+                                    <Row className="wallet-detail wallet-button">
+                                        <Col span={24}>
+                                            <Button className="connect-button" onClick={connectWallet}>{t("CONNECT WALLET")}</Button>
+                                        </Col>
+                                       
                                     </Row>
                                 </Col>
                             </Row>

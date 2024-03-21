@@ -17,7 +17,7 @@ import Roadmap from "../views/Roadmap";
 import {SERVER_URL} from "../../constants/env";
 const pair=[
     {name:"BTC",percent:3.19763724,price:57832.47921786725},
-    {name:"BTC",percent:3.19763724,price:57832.47921786725},
+    {name:"ETH",percent:3.19763724,price:57832.47921786725},
     {name:"BTC",percent:3.19763724,price:57832.47921786725},
     {name:"BTC",percent:3.19763724,price:57832.47921786725},
     {name:"BTC",percent:3.19763724,price:57832.47921786725},
@@ -43,7 +43,6 @@ function Home() {
               .then((response)=>{
                 if(response.data.response && response.data.data.length>0){
                   let data = response.data.data;
-                  console.log(data);
                   let initCoinData = [];
                   for(var i=0;i<6;i++)
                     initCoinData.push({
@@ -62,8 +61,26 @@ function Home() {
             console.log(error);
         }
   }
+
+  const fetchETHPrice = async ()=>{
+    try {
+      axios.get("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD")
+        .then((response)=>{
+          if(response.data){
+            console.log(response.data);
+            setCoinData((prev)=>{
+              let newData = prev.map((item)=> item.name === "ETH" ? ({...item, price: response.data.USD}) : ({...item}));
+              return newData;
+            });
+          }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
   useEffect(()=>{
     fetchData();
+    fetchETHPrice();
   },[])
   return (
 
